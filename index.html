@@ -17,13 +17,26 @@
 	
 	function Test()
 	{
-		var mapArray = generateMap(6);
+		var testArray = generateMap(6);
 		var test = "";
-		for (i = 0; i < mapArray.length; i++)
+		for (i = 0; i < testArray.length; i++)
 		{
-			for (j = 0; j < mapArray.length; j++)
+			for (j = 0; j < testArray.length; j++)
 			{
-				test += mapArray[i][j];
+				test += testArray[i][j];
+				test += " / ";
+			}
+			test += "\n";
+		}
+		alert(test);
+		
+		testArray = generateBiome("Forest");
+		test = "";
+		for (i = 0; i < testArray.length; i++)
+		{
+			for (j = 0; j < testArray.length; j++)
+			{
+				test += testArray[i][j];
 				test += " / ";
 			}
 			test += "\n";
@@ -53,35 +66,50 @@
 				
 			}
 		}
-		
 		return mapArray;
 	}
 	
-	function generatBiome(biome)
+	function generateBiome(biome)
 	{
 		var biomeArray = new Array(6);
-		for (i = 0; i < size; i++)
+		for (i = 0; i < biomeArray.length; i++)
 		{
 			biomeArray[i] = new Array(6);
 		}
 		
 		var rand;
 		
-		switch("Forest")
-		for (i = 0; i < biomeArray.length; i++)
+		switch(biome)
 		{
-			for (j = 0; j < biomeArray.length; j++)
-			{
-				rand = Math.Random();
-			}
+			case "Forest":
+				for (i = 0; i < biomeArray.length; i++)
+				{
+					for (j = 0; j < biomeArray.length; j++)
+					{
+						rand = Math.random();
+						if (rand < 0.3)
+						{
+							biomeArray[i][j] = "Tree";
+						}
+						else if (rand < 0.4)
+						{
+							biomeArray[i][j] = "Bush";
+						}
+						else
+						{
+							biomeArray[i][j] = "empty";
+						}
+					}
+				}
+				break;
+			case "Town":
+				break;
+			case "Desert":
+				break;
+			default: //Ocean
+				break;
 		}
-			break;
-		switch("Town")
-			break;
-		switch("Desert")
-			break;
-		default: //Ocean
-			break;
+		return biomeArray;
 	}
   </script>
 </html>
