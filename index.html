@@ -3,19 +3,45 @@
   <head>
     <meta charset="UTF-8">
     <title>Squidmen Wage a Land War</title>
+	<style>
+		canvas {
+			border: 1px solid black;
+			display: inline;
+		}
+	</style>
   </head>
-  <body onload="Test()">
-  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <body onload="Setup()">
+	<canvas id="gameCanvas" width="0" height="0"></canvas>
   </body>
   <script>
-	/*  
-	local file:
-	file:///H:/Art/Squidmen/index.html
-	*/
 	
 	var biomes = ["Ocean", "Forest", "Town", "Desert"];
 	var tileMapImg = new Image();
 	tileMapImg.src = "tileset.png";
+	var gameCanvas = $("#gameCanvas");
+	var mapSize = 10;
+	var biomeSize = 6;
+	var tileSize = 16;
+	
+	/*
+	*****Non-Random biomes:*****
+	Ocean
+	*/
+	
+	function Setup()
+	{
+		gameCanvas.width(mapSize*biomeSize*tileSize);
+		gameCanvas.height(mapSize*biomeSize*tileSize);
+		var map = generateMap(mapSize);
+		for (i = 0; i < mapSize; i++)
+		{
+			for (j = 0; j < mapSize; j++)
+			{
+				
+			}
+		}
+	}
 	
 	function Test()
 	{
@@ -57,7 +83,7 @@
 			{
 				if ((i == 0) || (j == 0) || (i == size - 1) || (j == size - 1))
 				{
-					mapArray[i][j] = biomes[0];
+					mapArray[i][j] = "Ocean";
 				}
 				else
 				{
@@ -73,10 +99,10 @@
 	
 	function generateBiome(biome)
 	{
-		var biomeArray = new Array(6);
+		var biomeArray = new Array(biomeSize);
 		for (i = 0; i < biomeArray.length; i++)
 		{
-			biomeArray[i] = new Array(6);
+			biomeArray[i] = new Array(biomeSize);
 		}
 		
 		var rand;
