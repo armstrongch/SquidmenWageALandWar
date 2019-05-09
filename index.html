@@ -16,29 +16,74 @@
   </body>
   <script>
 	
-	var biomes = ["Ocean", "Forest", "Town", "Desert"];
+	var biomes = ["Forest", "Town", "Farm", "Desert"];
 	var tileMapImg = new Image();
 	tileMapImg.src = "tileset.png";
-	var gameCanvas = $("#gameCanvas");
-	var mapSize = 10;
+	var gameCanvas = document.getElementById("gameCanvas");
+	var ctx = gameCanvas.getContext("2d");
+	var mapSize = 25;
 	var biomeSize = 6;
-	var tileSize = 16;
+	var tileSize = 32;
 	
-	/*
-	*****Non-Random biomes:*****
-	Ocean
-	*/
-	
+	var tilePositions = 
+	{
+		Tree1: 		{x:0,y:1},
+		Tree2: 		{x:1,y:1},
+		Tree3: 		{x:2,y:1},
+		Tree4: 		{x:3,y:1},
+		Tree5: 		{x:4,y:1},
+		Tree6: 		{x:5,y:1},
+		Tree7: 		{x:3,y:2},
+		Tree8: 		{x:4,y:2},
+		Water: 		{x:8,y:5},
+		Grass1: 	{x:5,y:0},
+		Grass2:		{x:7,y:0},
+		Rocks:		{x:5,y:2},
+		DirtRoad:	{x:2,y:0},
+		House1:		{x:0,y:21},
+		House2:		{x:1,y:21},
+		House3:		{x:2,y:21},
+		WoodFence:		{x:1,y:3},
+		WoodFenceGate:	{x:3,y:3},
+		Crop1:		{x:13,y:6},
+		Crop2:		{x:14,y:6},
+		Crop3:		{x:15,y:6},
+		Crop4:		{x:16,y:6},
+		Crop5:		{x:17,y:6},
+		Barn:		{x:0,y:20},
+		Cactus:		{x:6,y:1},
+		DeadTree:	{x:6,y:2},
+		Empty:		{x:0,y:0}
+	}
+
 	function Setup()
 	{
-		gameCanvas.width(mapSize*biomeSize*tileSize);
-		gameCanvas.height(mapSize*biomeSize*tileSize);
+		gameCanvas.width = mapSize*biomeSize*tileSize;
+		gameCanvas.height = mapSize*biomeSize*tileSize;
 		var map = generateMap(mapSize);
 		for (i = 0; i < mapSize; i++)
 		{
 			for (j = 0; j < mapSize; j++)
 			{
-				
+				var newBiome = generateBiome(map[i][j]);
+				//map[i][j] = newBiome;
+				var biomXPos = i * biomeSize*(tileSize);
+				var biomYPos = j * biomeSize*(tileSize);
+				for (ii = 0; ii < biomeSize; ii++)
+				{
+					for (jj = 0; jj < biomeSize; jj++)
+					{
+						ctx.drawImage(
+							tileMapImg,
+							tilePositions[newBiome[ii][jj]].x*(tileSize + 2), 	// x positon
+							tilePositions[newBiome[ii][jj]].y*(tileSize + 2),	// y position
+							tileSize, tileSize,									// size
+							biomXPos + ii*(tileSize), 							// x canvas location
+							biomYPos + jj*(tileSize),								// y canvas location
+							tileSize, tileSize									// size on canvas
+						);					
+					}
+				}
 			}
 		}
 	}
@@ -47,11 +92,11 @@
 	{
 		var testArray = generateMap(6);
 		var test = "";
-		for (i = 0; i < testArray.length; i++)
+		for (k = 0; k < testArray.length; k++)
 		{
-			for (j = 0; j < testArray.length; j++)
+			for (l = 0; l < testArray.length; l++)
 			{
-				test += testArray[i][j];
+				test += testArray[k][l];
 				test += " / ";
 			}
 			test += "\n";
@@ -60,11 +105,11 @@
 		
 		testArray = generateBiome("Forest");
 		test = "";
-		for (i = 0; i < testArray.length; i++)
+		for (m = 0; m < testArray.length; m++)
 		{
-			for (j = 0; j < testArray.length; j++)
+			for (n = 0; n < testArray.length; n++)
 			{
-				test += testArray[i][j];
+				test += testArray[m][n];
 				test += " / ";
 			}
 			test += "\n";
@@ -76,18 +121,18 @@
 	{
 		var mapArray = new Array(size);
 		
-		for (i = 0; i < size; i++)
+		for (o = 0; o < size; o++)
 		{
-			mapArray[i] = new Array(size);
-			for (j = 0; j < size; j++)
+			mapArray[o] = new Array(size);
+			for (p = 0; p < size; p++)
 			{
-				if ((i == 0) || (j == 0) || (i == size - 1) || (j == size - 1))
+				if ((o == 0) || (p == 0) || (o == size - 1) || (p == size - 1))
 				{
-					mapArray[i][j] = "Ocean";
+					mapArray[o][p] = "Ocean";
 				}
 				else
 				{
-					mapArray[i][j] = biomes[
+					mapArray[o][p] = biomes[
 						Math.floor(Math.random() * biomes.length) 
 					];
 				}
@@ -100,9 +145,9 @@
 	function generateBiome(biome)
 	{
 		var biomeArray = new Array(biomeSize);
-		for (i = 0; i < biomeArray.length; i++)
+		for (q = 0; q < biomeArray.length; q++)
 		{
-			biomeArray[i] = new Array(biomeSize);
+			biomeArray[q] = new Array(biomeSize);
 		}
 		
 		var rand;
@@ -110,31 +155,128 @@
 		switch(biome)
 		{
 			case "Forest":
-				for (i = 0; i < biomeArray.length; i++)
+				var treeNum = Math.ceil(Math.random()*8);
+				var grassNum = Math.ceil(Math.random()*2);
+				for (q = 0; q < biomeArray.length; q++)
 				{
-					for (j = 0; j < biomeArray.length; j++)
+					for (r = 0; r < biomeArray.length; r++)
 					{
 						rand = Math.random();
-						if (rand < 0.3)
+						if (rand < 0.1)
 						{
-							biomeArray[i][j] = "Tree";
+							biomeArray[q][r] = "Rocks";
 						}
-						else if (rand < 0.4)
+						else if (rand < 0.5)
 						{
-							biomeArray[i][j] = "Bush";
+							biomeArray[q][r] = "Tree" + treeNum;
 						}
 						else
 						{
-							biomeArray[i][j] = "empty";
+							biomeArray[q][r] = "Grass" + grassNum;
+						}
+					}
+				}
+				break;
+			case "Desert":
+				for (q = 0; q < biomeArray.length; q++)
+				{
+					for (r = 0; r < biomeArray.length; r++)
+					{
+						rand = Math.random();
+						if (rand < 0.2)
+						{
+							biomeArray[q][r] = "Cactus";
+						}
+						else if (rand < 0.25)
+						{
+							biomeArray[q][r] = "DeadTree";
+						}
+						else if (rand < 0.3)
+						{
+							biomeArray[q][r] = "Rocks";
+						}
+						else
+						{
+							biomeArray[q][r] = "Empty";
 						}
 					}
 				}
 				break;
 			case "Town":
+				var grassNum = Math.ceil(Math.random()*2);
+				for (q = 0; q < biomeArray.length; q++)
+				{
+					for (r = 0; r < biomeArray.length; r++)
+					{
+						if ((q == 0) || (r == 0) || (q == biomeArray.length - 1) || (r == biomeArray.length - 1))
+						{
+							biomeArray[q][r] = "DirtRoad";
+						}
+						else if 
+						(((q == 2)&&(r == 2)) ||
+						((q == 2)&&(r == 3)) ||
+						((q == 3)&&(r == 2)) ||
+						((q == 3)&&(r == 3)))
+						{
+							biomeArray[q][r] = "Grass" + grassNum;
+						}
+						else
+						{
+							var houseNum = Math.ceil(Math.random()*3);
+							biomeArray[q][r] = "House" + houseNum;
+						}
+					}
+				}
 				break;
-			case "Desert":
+			case "Farm":
+				var cropNum = Math.ceil(Math.random()*5);
+				for (q = 0; q < biomeArray.length; q++)
+				{
+					for (r = 0; r < biomeArray.length; r++)
+					{
+						if ((q == 0) || (r == 0) || (q == biomeArray.length - 1) || (r == biomeArray.length - 1))
+						{
+							biomeArray[q][r] = "WoodFence";
+						}
+						else
+						{
+							biomeArray[q][r] = "Crop" + cropNum;
+						}
+					}
+				}
+				var farmDir = Math.ceil(Math.random()*4);
+				switch(farmDir)
+				{
+					case 1:
+						biomeArray[2][2] = "Barn";
+						biomeArray[1][2] = "DirtRoad";
+						biomeArray[0][2] = "WoodFenceGate";
+						break;
+					case 2:
+						biomeArray[3][2] = "Barn";
+						biomeArray[3][1] = "DirtRoad";
+						biomeArray[3][0] = "WoodFenceGate";
+						break;
+					case 3:
+						biomeArray[3][3] = "Barn";
+						biomeArray[4][3] = "DirtRoad";
+						biomeArray[5][3] = "WoodFenceGate";
+						break;
+					default:
+						biomeArray[2][3] = "Barn";
+						biomeArray[2][4] = "DirtRoad";
+						biomeArray[2][5] = "WoodFenceGate";
+						break;
+				}
 				break;
 			default: //Ocean
+				for (q = 0; q < biomeArray.length; q++)
+				{
+					for (r = 0; r < biomeArray.length; r++)
+					{
+						biomeArray[q][r] = "Water";
+					}
+				}
 				break;
 		}
 		return biomeArray;
