@@ -16,44 +16,60 @@
   </body>
   <script>
 	
-	var biomes = ["Forest", "Town", "Farm", "Desert"];
+	var biomes = [
+		"Forest",
+		"Town", 
+		"Farm", 
+		"Desert", 
+		"Graveyard", 
+		"City"
+	];
 	var tileMapImg = new Image();
 	tileMapImg.src = "tileset.png";
 	var gameCanvas = document.getElementById("gameCanvas");
 	var ctx = gameCanvas.getContext("2d");
-	var mapSize = 25;
+	var mapSize = 10;
 	var biomeSize = 6;
 	var tileSize = 32;
 	
 	var tilePositions = 
 	{
-		Tree1: 		{x:0,y:1},
-		Tree2: 		{x:1,y:1},
-		Tree3: 		{x:2,y:1},
-		Tree4: 		{x:3,y:1},
-		Tree5: 		{x:4,y:1},
-		Tree6: 		{x:5,y:1},
-		Tree7: 		{x:3,y:2},
-		Tree8: 		{x:4,y:2},
-		Water: 		{x:8,y:5},
-		Grass1: 	{x:5,y:0},
-		Grass2:		{x:7,y:0},
-		Rocks:		{x:5,y:2},
-		DirtRoad:	{x:2,y:0},
-		House1:		{x:0,y:21},
-		House2:		{x:1,y:21},
-		House3:		{x:2,y:21},
-		WoodFence:		{x:1,y:3},
-		WoodFenceGate:	{x:3,y:3},
-		Crop1:		{x:13,y:6},
-		Crop2:		{x:14,y:6},
-		Crop3:		{x:15,y:6},
-		Crop4:		{x:16,y:6},
-		Crop5:		{x:17,y:6},
-		Barn:		{x:0,y:20},
-		Cactus:		{x:6,y:1},
-		DeadTree:	{x:6,y:2},
-		Empty:		{x:0,y:0}
+		Tree1: 				{x:0,y:1},
+		Tree2: 				{x:1,y:1},
+		Tree3: 				{x:2,y:1},
+		Tree4: 				{x:3,y:1},
+		Tree5: 				{x:4,y:1},
+		Tree6: 				{x:5,y:1},
+		Tree7: 				{x:3,y:2},
+		Tree8: 				{x:4,y:2},
+		Water: 				{x:8,y:5},
+		Grass1: 			{x:5,y:0},
+		Grass2:				{x:7,y:0},
+		Rocks:				{x:5,y:2},
+		DirtRoad:			{x:2,y:0},
+		House1:				{x:0,y:21},
+		House2:				{x:1,y:21},
+		House3:				{x:2,y:21},
+		WoodFence:			{x:1,y:3},
+		WoodFenceGate:		{x:3,y:3},
+		Crop1:				{x:13,y:6},
+		Crop2:				{x:14,y:6},
+		Crop3:				{x:15,y:6},
+		Crop4:				{x:16,y:6},
+		Crop5:				{x:17,y:6},
+		Barn:				{x:0,y:20},
+		Cactus:				{x:6,y:1},
+		DeadTree:			{x:6,y:2},
+		Empty:				{x:0,y:0},
+		Tombstone:			{x:1,y:14},
+		BrokenMetalFence: 	{x:6,y:3},
+		MetalFence:			{x:5,y:3},
+		PavedRoad:			{x:8,y:0},
+		Skyscraper1:		{x:3,y:21},
+		Skyscraper2:		{x:4,y:21},
+		Skyscraper3:		{x:5,y:21},
+		Skyscraper4:		{x:6,y:21},
+		Skyscraper5:		{x:7,y:21},
 	}
 
 	function Setup()
@@ -202,6 +218,23 @@
 					}
 				}
 				break;
+			case "City":
+				for (q = 0; q < biomeArray.length; q++)
+				{
+					for (r = 0; r < biomeArray.length; r++)
+					{
+						var skyscraperNum = Math.ceil(Math.random()*5);
+						if ((q == 1) || (q == 4))
+						{
+							biomeArray[q][r] = "PavedRoad";
+						}
+						else
+						{
+							biomeArray[q][r] = "Skyscraper" + skyscraperNum;
+						}
+					}
+				}
+				break;
 			case "Town":
 				var grassNum = Math.ceil(Math.random()*2);
 				for (q = 0; q < biomeArray.length; q++)
@@ -224,6 +257,42 @@
 						{
 							var houseNum = Math.ceil(Math.random()*3);
 							biomeArray[q][r] = "House" + houseNum;
+						}
+					}
+				}
+				break;
+			case "Graveyard":
+				for (q = 0; q < biomeArray.length; q++)
+				{
+					for (r = 0; r < biomeArray.length; r++)
+					{
+						var rand = Math.random();
+						if ((q == 0) || (r == 0) || (q == biomeArray.length - 1) || (r == biomeArray.length - 1))
+						{
+							if (rand < 0.2)
+							{
+								biomeArray[q][r] = "BrokenMetalFence";
+							}
+							else
+							{
+								biomeArray[q][r] = "MetalFence";
+							}
+						}
+						else if ((((q-1)%2 == 0) && ((r-1)%2 == 0)) || (((q)%2 == 0) && ((r)%2 == 0)))
+						{
+							biomeArray[q][r] = "Tombstone";
+						}
+						else if (rand < 0.1)
+						{
+							biomeArray[q][r] = "Grass1";
+						}
+						else if (rand < 0.2)
+						{
+							biomeArray[q][r] = "Grass2";
+						}
+						else
+						{
+							biomeArray[q][r] = "DirtRoad";
 						}
 					}
 				}
